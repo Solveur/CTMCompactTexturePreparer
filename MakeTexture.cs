@@ -38,11 +38,13 @@
 		{
 			if (folderBrowserDialog.ShowDialog() != DialogResult.OK) return;
 
-			CTM0(texture, borderColor).Save(folderBrowserDialog.SelectedPath + @"\0.png");
-			CTM1(texture, borderColor).Save(folderBrowserDialog.SelectedPath + @"\1.png");
-			CTM2(texture, borderColor).Save(folderBrowserDialog.SelectedPath + @"\2.png");
-			CTM3(texture, borderColor).Save(folderBrowserDialog.SelectedPath + @"\3.png");
-			CTM4(texture, borderColor).Save(folderBrowserDialog.SelectedPath + @"\4.png");
+			string suffix = checkBoxIsEmissive.Checked ? "_e" : "";
+
+			CTM0(texture, borderColor).Save(folderBrowserDialog.SelectedPath + $@"\0{suffix}.png");
+			CTM1(texture, borderColor).Save(folderBrowserDialog.SelectedPath + $@"\1{suffix}.png");
+			CTM2(texture, borderColor).Save(folderBrowserDialog.SelectedPath + $@"\2{suffix}.png");
+			CTM3(texture, borderColor).Save(folderBrowserDialog.SelectedPath + $@"\3{suffix}.png");
+			CTM4(texture, borderColor).Save(folderBrowserDialog.SelectedPath + $@"\4{suffix}.png");
 		}
 
 		private void PictureBoxTexture_MouseClick(object sender, MouseEventArgs e)
@@ -154,11 +156,17 @@
 		private void Execute()
 		{
 			if (pictureBoxTexture.Image == null) return;
-			pictureBoxCTM0.Image = Upscale(CTM0(texture, borderColor), 4);
-			pictureBoxCTM1.Image = Upscale(CTM1(texture, borderColor), 4);
-			pictureBoxCTM2.Image = Upscale(CTM2(texture, borderColor), 4);
-			pictureBoxCTM3.Image = Upscale(CTM3(texture, borderColor), 4);
-			pictureBoxCTM4.Image = Upscale(CTM4(texture, borderColor), 4);
+			pictureBoxCTM0.Image = Upscale(CTM0(texture, borderColor), 5);
+			pictureBoxCTM1.Image = Upscale(CTM1(texture, borderColor), 5);
+			pictureBoxCTM2.Image = Upscale(CTM2(texture, borderColor), 5);
+			pictureBoxCTM3.Image = Upscale(CTM3(texture, borderColor), 5);
+			pictureBoxCTM4.Image = Upscale(CTM4(texture, borderColor), 5);
+		}
+
+		private void CheckBoxIsEmissive_CheckedChanged(object sender, EventArgs e)
+		{
+			textBoxEmissiveSuffix.Enabled = checkBoxIsEmissive.Checked;
+			label1.Enabled = checkBoxIsEmissive.Checked;
 		}
 	}
 }

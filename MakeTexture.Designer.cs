@@ -44,6 +44,9 @@
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.GroupBox = new System.Windows.Forms.GroupBox();
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.checkBoxIsEmissive = new System.Windows.Forms.CheckBox();
+			this.textBoxEmissiveSuffix = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxTexture)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCTM0)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCTM1)).BeginInit();
@@ -74,6 +77,7 @@
 			// pictureBoxTexture
 			// 
 			this.pictureBoxTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pictureBoxTexture.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.pictureBoxTexture.Location = new System.Drawing.Point(6, 48);
 			this.pictureBoxTexture.Name = "pictureBoxTexture";
 			this.pictureBoxTexture.Size = new System.Drawing.Size(320, 320);
@@ -93,39 +97,39 @@
 			// 
 			this.pictureBoxCTM0.Location = new System.Drawing.Point(6, 19);
 			this.pictureBoxCTM0.Name = "pictureBoxCTM0";
-			this.pictureBoxCTM0.Size = new System.Drawing.Size(64, 64);
+			this.pictureBoxCTM0.Size = new System.Drawing.Size(80, 80);
 			this.pictureBoxCTM0.TabIndex = 5;
 			this.pictureBoxCTM0.TabStop = false;
 			// 
 			// pictureBoxCTM1
 			// 
-			this.pictureBoxCTM1.Location = new System.Drawing.Point(6, 89);
+			this.pictureBoxCTM1.Location = new System.Drawing.Point(6, 105);
 			this.pictureBoxCTM1.Name = "pictureBoxCTM1";
-			this.pictureBoxCTM1.Size = new System.Drawing.Size(64, 64);
+			this.pictureBoxCTM1.Size = new System.Drawing.Size(80, 80);
 			this.pictureBoxCTM1.TabIndex = 6;
 			this.pictureBoxCTM1.TabStop = false;
 			// 
 			// pictureBoxCTM4
 			// 
-			this.pictureBoxCTM4.Location = new System.Drawing.Point(6, 299);
+			this.pictureBoxCTM4.Location = new System.Drawing.Point(6, 363);
 			this.pictureBoxCTM4.Name = "pictureBoxCTM4";
-			this.pictureBoxCTM4.Size = new System.Drawing.Size(64, 64);
+			this.pictureBoxCTM4.Size = new System.Drawing.Size(80, 80);
 			this.pictureBoxCTM4.TabIndex = 7;
 			this.pictureBoxCTM4.TabStop = false;
 			// 
 			// pictureBoxCTM3
 			// 
-			this.pictureBoxCTM3.Location = new System.Drawing.Point(6, 229);
+			this.pictureBoxCTM3.Location = new System.Drawing.Point(6, 277);
 			this.pictureBoxCTM3.Name = "pictureBoxCTM3";
-			this.pictureBoxCTM3.Size = new System.Drawing.Size(64, 64);
+			this.pictureBoxCTM3.Size = new System.Drawing.Size(80, 80);
 			this.pictureBoxCTM3.TabIndex = 8;
 			this.pictureBoxCTM3.TabStop = false;
 			// 
 			// pictureBoxCTM2
 			// 
-			this.pictureBoxCTM2.Location = new System.Drawing.Point(6, 159);
+			this.pictureBoxCTM2.Location = new System.Drawing.Point(6, 191);
 			this.pictureBoxCTM2.Name = "pictureBoxCTM2";
-			this.pictureBoxCTM2.Size = new System.Drawing.Size(64, 64);
+			this.pictureBoxCTM2.Size = new System.Drawing.Size(80, 80);
 			this.pictureBoxCTM2.TabIndex = 9;
 			this.pictureBoxCTM2.TabStop = false;
 			// 
@@ -157,7 +161,7 @@
 			this.buttonSave.BackColor = System.Drawing.Color.Chartreuse;
 			this.buttonSave.FlatAppearance.BorderColor = System.Drawing.Color.White;
 			this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonSave.Location = new System.Drawing.Point(12, 463);
+			this.buttonSave.Location = new System.Drawing.Point(12, 495);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(75, 23);
 			this.buttonSave.TabIndex = 12;
@@ -174,16 +178,49 @@
 			this.GroupBox.Controls.Add(this.pictureBoxCTM3);
 			this.GroupBox.Location = new System.Drawing.Point(350, 12);
 			this.GroupBox.Name = "GroupBox";
-			this.GroupBox.Size = new System.Drawing.Size(76, 369);
+			this.GroupBox.Size = new System.Drawing.Size(92, 449);
 			this.GroupBox.TabIndex = 13;
 			this.GroupBox.TabStop = false;
 			this.GroupBox.Text = "Result";
+			// 
+			// checkBoxIsEmissive
+			// 
+			this.checkBoxIsEmissive.AutoSize = true;
+			this.checkBoxIsEmissive.Location = new System.Drawing.Point(18, 444);
+			this.checkBoxIsEmissive.Name = "checkBoxIsEmissive";
+			this.checkBoxIsEmissive.Size = new System.Drawing.Size(73, 17);
+			this.checkBoxIsEmissive.TabIndex = 14;
+			this.checkBoxIsEmissive.Text = "Emissive?";
+			this.checkBoxIsEmissive.UseVisualStyleBackColor = true;
+			this.checkBoxIsEmissive.CheckedChanged += new System.EventHandler(this.CheckBoxIsEmissive_CheckedChanged);
+			// 
+			// textBoxEmissiveSuffix
+			// 
+			this.textBoxEmissiveSuffix.Enabled = false;
+			this.textBoxEmissiveSuffix.Location = new System.Drawing.Point(97, 442);
+			this.textBoxEmissiveSuffix.Name = "textBoxEmissiveSuffix";
+			this.textBoxEmissiveSuffix.Size = new System.Drawing.Size(100, 20);
+			this.textBoxEmissiveSuffix.TabIndex = 15;
+			this.textBoxEmissiveSuffix.Text = "_e";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Enabled = false;
+			this.label1.Location = new System.Drawing.Point(203, 445);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(75, 13);
+			this.label1.TabIndex = 16;
+			this.label1.Text = "Emissive suffix";
 			// 
 			// MakeTexture
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(435, 498);
+			this.ClientSize = new System.Drawing.Size(455, 530);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.textBoxEmissiveSuffix);
+			this.Controls.Add(this.checkBoxIsEmissive);
 			this.Controls.Add(this.GroupBox);
 			this.Controls.Add(this.buttonSave);
 			this.Controls.Add(this.GroupBoxParameters);
@@ -221,6 +258,9 @@
 		private System.Windows.Forms.Button buttonSave;
 		private System.Windows.Forms.GroupBox GroupBox;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+		private System.Windows.Forms.CheckBox checkBoxIsEmissive;
+		private System.Windows.Forms.TextBox textBoxEmissiveSuffix;
+		private System.Windows.Forms.Label label1;
 	}
 }
 
