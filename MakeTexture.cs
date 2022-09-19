@@ -11,6 +11,7 @@
 	using System.Text;
 	using System.Threading.Tasks;
 	using System.Windows.Forms;
+	using CTMCompactTexturePreparer.Properties;
 
 	public partial class MakeTexture : Form
 	{
@@ -20,6 +21,7 @@
 		public MakeTexture()
 		{
 			InitializeComponent();
+			pictureBoxTexture.AllowDrop = true;
 		}
 
 		private void ButtonSelectTexture_Click(object sender, EventArgs e)
@@ -64,6 +66,12 @@
 			panelColor.BackColor = colorDialog.Color;
 			borderColor = colorDialog.Color;
 			Execute();
+		}
+
+		private void CheckBoxIsEmissive_CheckedChanged(object sender, EventArgs e)
+		{
+			textBoxEmissiveSuffix.Enabled = checkBoxIsEmissive.Checked;
+			label1.Enabled = checkBoxIsEmissive.Checked;
 		}
 
 		private Bitmap CTM0(Bitmap texture, Color color)
@@ -163,10 +171,32 @@
 			pictureBoxCTM4.Image = Upscale(CTM4(texture, borderColor), 5);
 		}
 
-		private void CheckBoxIsEmissive_CheckedChanged(object sender, EventArgs e)
+		private void PictureBoxTexture_DragEnter(object sender, DragEventArgs e)
 		{
-			textBoxEmissiveSuffix.Enabled = checkBoxIsEmissive.Checked;
-			label1.Enabled = checkBoxIsEmissive.Checked;
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			{
+				string filename = @"S:\VS Source\CTMCompactTexturePreparer\dragOver.png";
+				using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
+					pictureBoxTexture.Image = new Bitmap(ms);
+
+				e.Effect = DragDropEffects.Move;
+			}
+		}
+
+		private void PictureBoxTexture_DragLeave(object sender, EventArgs e)
+		{
+			pictureBoxTexture.Image = null;
+		}
+
+		private void PictureBoxTexture_DragDrop(object sender, DragEventArgs e)
+		{
+			string filename = e.Data.GetData(DataFormats.FileDrop).ToString();
+
+			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
+				texture = new Bitmap(ms);
+
+			pictureBoxTexture.Image = Upscale(texture, 20);
+			Execute();
 		}
 	}
 }

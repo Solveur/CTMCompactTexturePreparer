@@ -83,6 +83,9 @@
 			this.pictureBoxTexture.Size = new System.Drawing.Size(320, 320);
 			this.pictureBoxTexture.TabIndex = 1;
 			this.pictureBoxTexture.TabStop = false;
+			this.pictureBoxTexture.DragDrop += new System.Windows.Forms.DragEventHandler(this.PictureBoxTexture_DragDrop);
+			this.pictureBoxTexture.DragEnter += new System.Windows.Forms.DragEventHandler(this.PictureBoxTexture_DragEnter);
+			this.pictureBoxTexture.DragLeave += new System.EventHandler(this.PictureBoxTexture_DragLeave);
 			this.pictureBoxTexture.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxTexture_MouseClick);
 			// 
 			// labelColor
@@ -215,6 +218,7 @@
 			// 
 			// MakeTexture
 			// 
+			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(455, 530);
