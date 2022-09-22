@@ -17,6 +17,7 @@
 	{
 		Bitmap texture;
 		Color borderColor;
+		Image pictureBoxTemp;
 
 		public MakeTexture()
 		{
@@ -91,7 +92,6 @@
 
 			return result;
 		}
-
 		private Bitmap CTM1(Bitmap texture, Color color)
 		{
 			if (texture.Width != texture.Height) throw new Exception();
@@ -100,7 +100,6 @@
 
 			return result;
 		}
-
 		private Bitmap CTM2(Bitmap texture, Color color)
 		{
 			if (texture.Width != texture.Height) throw new Exception();
@@ -173,6 +172,7 @@
 
 		private void PictureBoxTexture_DragEnter(object sender, DragEventArgs e)
 		{
+			pictureBoxTemp = pictureBoxTexture.Image;
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
 				string filename = @"S:\VS Source\CTMCompactTexturePreparer\dragOver.png";
@@ -185,14 +185,14 @@
 
 		private void PictureBoxTexture_DragLeave(object sender, EventArgs e)
 		{
-			pictureBoxTexture.Image = null;
+			pictureBoxTexture.Image = pictureBoxTemp;
 		}
 
 		private void PictureBoxTexture_DragDrop(object sender, DragEventArgs e)
 		{
-			string filename = e.Data.GetData(DataFormats.FileDrop).ToString();
+			string[] filename = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
+			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename[0])))
 				texture = new Bitmap(ms);
 
 			pictureBoxTexture.Image = Upscale(texture, 20);
