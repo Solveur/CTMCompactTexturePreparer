@@ -27,14 +27,14 @@
 
 		private void ButtonSelectTexture_Click(object sender, EventArgs e)
 		{
+
 			openFileDialog.ShowDialog();
 			string filename = openFileDialog.FileName;
 
 			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
 				texture = new Bitmap(ms);
 
-			pictureBoxTexture.Image = Upscale(texture, 20);
-			Execute();
+			SetTexture(texture);
 		}
 
 		private void ButtonSave_Click(object sender, EventArgs e)
@@ -58,15 +58,18 @@
 				borderColor = bmp.GetPixel(e.X, e.Y);
 				panelColor.BackColor = bmp.GetPixel(e.X, e.Y);
 			}
-			Execute();
+
+			UpdatePictures();
 		}
 
 		private void PanelColor_Click(object sender, EventArgs e)
 		{
-			colorDialog.ShowDialog();
+			if (colorDialog.ShowDialog() == DialogResult.Cancel)
+				return;
+
 			panelColor.BackColor = colorDialog.Color;
 			borderColor = colorDialog.Color;
-			Execute();
+			UpdatePictures();
 		}
 
 		private void CheckBoxIsEmissive_CheckedChanged(object sender, EventArgs e)
@@ -80,12 +83,12 @@
 			if (colorDialog.Color == null) throw new NullReferenceException();
 			if (texture.Width != texture.Height) throw new Exception();
 			Bitmap result = new Bitmap(texture);
-			int topI = texture.Width - 1; // 15|31|63|127
+			int maxI = texture.Width - 1; // 15|31|63|127
 
 			for (int i = 0; i < texture.Width; i++)
 			{
-				result.SetPixel(topI, i, color); // right
-				result.SetPixel(i, topI, color); // bottom
+				result.SetPixel(maxI, i, color); // right
+				result.SetPixel(i, maxI, color); // bottom
 				result.SetPixel(0, i, color); // left
 				result.SetPixel(i, 0, color); // top
 			}
@@ -96,6 +99,7 @@
 		{
 			if (texture.Width != texture.Height) throw new Exception();
 			if (colorDialog.Color == null) throw new NullReferenceException();
+
 			Bitmap result = new Bitmap(texture);
 
 			return result;
@@ -104,6 +108,7 @@
 		{
 			if (texture.Width != texture.Height) throw new Exception();
 			if (colorDialog.Color == null) throw new NullReferenceException();
+
 			Bitmap result = new Bitmap(texture);
 			int topI = texture.Width - 1; // 15|31|63|127
 
@@ -119,6 +124,7 @@
 		{
 			if (texture.Width != texture.Height) throw new Exception();
 			if (colorDialog.Color == null) throw new NullReferenceException();
+
 			Bitmap result = new Bitmap(texture);
 			int topI = texture.Width - 1; // 15|31|63|127
 
@@ -134,51 +140,39 @@
 		{
 			if (texture.Width != texture.Height) throw new Exception();
 			if (colorDialog.Color == null) throw new NullReferenceException();
+
 			Bitmap result = new Bitmap(texture);
 			int topI = texture.Width - 1; // 15|31|63|127
 
-			result.SetPixel(0, 0, color);
-			result.SetPixel(0, topI, color);
-			result.SetPixel(topI, 0, color);
-			result.SetPixel(topI, topI, color);
+			result.SetPixel(0, 0, color); // top left
+			result.SetPixel(0, topI, color); // top right
+			result.SetPixel(topI, 0, color); // bottom left
+			result.SetPixel(topI, topI, color); // bottom right
 
 			return result;
 		}
 
-		private Bitmap Upscale(Bitmap source, int factor)
+		private void UpdatePictures()
 		{
-			int sourceSize = source.Width;
-			int size = sourceSize * factor;
-			Bitmap result = new Bitmap(size, size);
+			if (pictureBoxTexture.Image == null)
+				return;
 			
-			for(int x = 0; x < size; x++)
-				for(int y = 0; y < size; y++)
-				{
-					result.SetPixel(x, y, source.GetPixel(x / factor, y / factor));
-				}
+			int scaleFactor = 5;
+			int defaultTextureWidth = 16;
 
-			return result;
-		}
-
-		private void Execute()
-		{
-			if (pictureBoxTexture.Image == null) return;
-			pictureBoxCTM0.Image = Upscale(CTM0(texture, borderColor), 5);
-			pictureBoxCTM1.Image = Upscale(CTM1(texture, borderColor), 5);
-			pictureBoxCTM2.Image = Upscale(CTM2(texture, borderColor), 5);
-			pictureBoxCTM3.Image = Upscale(CTM3(texture, borderColor), 5);
-			pictureBoxCTM4.Image = Upscale(CTM4(texture, borderColor), 5);
-		}
-
+			pictureBoxCTM0.Image = CTM0(texture, borderColor).Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+			pictureBoxCTM1.Image = CTM1(texture, borderColor).Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+			pictureBoxCTM2.Image = CTM2(texture, borderColor).Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+			pictureBoxCTM3.Image = CTM3(texture, borderColor).Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+			pictureBoxCTM4.Image = CTM4(texture, borderColor).Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+		}																										
+																												
 		private void PictureBoxTexture_DragEnter(object sender, DragEventArgs e)
 		{
 			pictureBoxTemp = pictureBoxTexture.Image;
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
-				string filename = @"S:\VS Source\CTMCompactTexturePreparer\dragOver.png";
-				using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
-					pictureBoxTexture.Image = new Bitmap(ms);
-
+				pictureBoxTexture.Image = Resources.dragOver;
 				e.Effect = DragDropEffects.Move;
 			}
 		}
@@ -195,8 +189,17 @@
 			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename[0])))
 				texture = new Bitmap(ms);
 
-			pictureBoxTexture.Image = Upscale(texture, 20);
-			Execute();
+			SetTexture(texture);
+			UpdatePictures();
+		}
+
+		private void SetTexture(Bitmap texture)
+		{
+			int scaleFactor = 20;
+			int defaultTextureWidth = 16;
+
+			pictureBoxTexture.Image = texture.Upscale(scaleFactor*defaultTextureWidth/texture.Width);
+			UpdatePictures();
 		}
 	}
 }
