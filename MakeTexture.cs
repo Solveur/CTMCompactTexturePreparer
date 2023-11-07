@@ -9,7 +9,6 @@
 	public partial class Form_MakeTexture : Form
 	{
 		Bitmap texture;
-		Bitmap background;
 		Color borderColor;
 		Image pictureBox_Temp;
 
@@ -40,14 +39,14 @@
 			string suffix = checkBoxIsEmissive.Checked ? "_e" : "";
 			if (checkBox_DeleteBackground.Checked)
 			{
-				texture.CTM0(borderColor).DeleteBackground(background).Save(folderBrowserDialog.SelectedPath + $@"\0{suffix}.png");
-				texture.CTM1(borderColor).DeleteBackground(background).Save(folderBrowserDialog.SelectedPath + $@"\1{suffix}.png");
-				texture.CTM2(borderColor).DeleteBackground(background).Save(folderBrowserDialog.SelectedPath + $@"\2{suffix}.png");
-				texture.CTM3(borderColor).DeleteBackground(background).Save(folderBrowserDialog.SelectedPath + $@"\3{suffix}.png");
-				texture.CTM4(borderColor).DeleteBackground(background).Save(folderBrowserDialog.SelectedPath + $@"\4{suffix}.png");
-			}
-			else
-			{
+				texture.DeleteBackground().CTM0(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\0{suffix}.png");
+				texture.DeleteBackground().CTM1(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\1{suffix}.png");
+				texture.DeleteBackground().CTM2(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\2{suffix}.png");
+				texture.DeleteBackground().CTM3(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\3{suffix}.png");
+				texture.DeleteBackground().CTM4(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\4{suffix}.png");
+			}														
+			else												
+			{														
 				texture.CTM0(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\0{suffix}.png");
 				texture.CTM1(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\1{suffix}.png");
 				texture.CTM2(borderColor).Save(folderBrowserDialog.SelectedPath + $@"\2{suffix}.png");
@@ -83,10 +82,9 @@
 			textBox_EmissiveSuffix.Enabled = checkBoxIsEmissive.Checked;
 			label_EmissiveSuffix.Enabled = checkBoxIsEmissive.Checked;
 			checkBox_DeleteBackground.Enabled = checkBoxIsEmissive.Checked;
-			button_SelectBackground.Enabled = checkBoxIsEmissive.Checked && checkBox_DeleteBackground.Checked;
 		}
 
-		private void Button_SelectBackground_Click(object sender, EventArgs e)
+		private void button_SelectBackground_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog.ShowDialog() == DialogResult.Cancel)
 				return;
@@ -94,15 +92,14 @@
 			string filePath = openFileDialog.FileName;
 			string fileName = openFileDialog.SafeFileName;
 			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filePath)))
+			{
 				background = new Bitmap(ms);
-
+			}
 			button_SelectBackground.Text = fileName;
-			UpdatePictures();
 		}
 
 		private void CheckBox_DeleteBackground_CheckedChanged(object sender, EventArgs e)
 		{
-			button_SelectBackground.Enabled = checkBoxIsEmissive.Checked && checkBox_DeleteBackground.Checked;
 			UpdatePictures();
 		}
 
@@ -139,29 +136,22 @@
 
 			int scaleFactor = 5;
 			int defaultTextureWidth = 16;
-			Bitmap[] ctm = new Bitmap[] {
-				texture.CTM0(borderColor),
-				texture.CTM1(borderColor),
-				texture.CTM2(borderColor),
-				texture.CTM3(borderColor),
-				texture.CTM4(borderColor) 
-			};
 
-			if (checkBox_DeleteBackground.Checked && background != null)
+			if (checkBox_DeleteBackground.Checked)
 			{
-				pictureBoxCTM0.Image = ctm[0].DeleteBackground(background).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM1.Image = ctm[1].DeleteBackground(background).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM2.Image = ctm[2].DeleteBackground(background).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM3.Image = ctm[3].DeleteBackground(background).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM4.Image = ctm[4].DeleteBackground(background).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM0.Image = texture.DeleteBackground().CTM0(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM1.Image = texture.DeleteBackground().CTM1(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM2.Image = texture.DeleteBackground().CTM2(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM3.Image = texture.DeleteBackground().CTM3(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM4.Image = texture.DeleteBackground().CTM4(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
 			}
 			else
 			{
-				pictureBoxCTM0.Image = ctm[0].Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM1.Image = ctm[1].Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM2.Image = ctm[2].Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM3.Image = ctm[3].Upscale(scaleFactor * defaultTextureWidth / texture.Width);
-				pictureBoxCTM4.Image = ctm[4].Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM0.Image = texture.CTM0(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM1.Image = texture.CTM1(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM2.Image = texture.CTM2(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM3.Image = texture.CTM3(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
+				pictureBoxCTM4.Image = texture.CTM4(borderColor).Upscale(scaleFactor * defaultTextureWidth / texture.Width);
 			}
 		}
 

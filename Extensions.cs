@@ -21,30 +21,65 @@
 			return result;
 		}
 
-		public static Bitmap DeleteBackground(this Bitmap source, Bitmap background)
+		public static Bitmap DeleteBackground(this Bitmap image)
 		{
-			if (source.Width != background.Width || source.Height != background.Height)
-			{
-				throw new Exception("Size of picture and background are not the same");
-			}
+			int size = image.Width;
+			Bitmap result = new Bitmap(size,size);
 
-			int size = source.Width;
-			Bitmap result = source;
+			Color avgColor = image.GetAvgColor();
+			int avgGrey = (avgColor.R + avgColor.G + avgColor.B) / 3;
 
 			for (int y = 0; y < size; y++)
-			{
 				for (int x = 0; x < size; x++)
 				{
-					if (source.GetPixel(x, y) == background.GetPixel(x, y))
-					{
-						source.SetPixel(x, y, Color.Transparent);
-					}
+
+					int diffRed = avgGrey - image.GetPixel(x,y).R;
+					int diffGreen = avgGrey - image.GetPixel(x,y).G;
+					int diffBlue = avgGrey - image.GetPixel(x,y).B;
+
+					diffRed = Math.Abs(diffRed);
+					diffGreen = Math.Abs(diffGreen);
+					diffBlue = Math.Abs(diffBlue);
+
+					if (diffRed < 40 && diffGreen < 40 && diffBlue < 40) // Magic numbers but works
+						result.SetPixel(x, y, Color.Transparent);
+					else
+						result.SetPixel(x, y, image.GetPixel(x, y));
 				}
-			}
 
 			return result;
 		}
-		
+
+		public static Color GetAvgColor(this Bitmap image)
+		{
+			int totalRed = 0;
+			int numRed = 0;
+			int totalGreen = 0;
+			int numGreen = 0;
+			int totalBlue = 0;
+			int numBlue = 0;
+
+			int size = image.Width;
+			
+			for (int y = 0; y < size; y++)
+				for (int x = 0; x < size; x++)
+				{
+					totalRed += image.GetPixel(x, y).R;
+					numRed++;
+
+					totalGreen += image.GetPixel(x, y).G;
+					numGreen++;
+
+					totalBlue += image.GetPixel(x, y).B;
+					numBlue++;
+				}
+
+			int avgRed = totalRed / numRed;
+			int avgGreen = totalGreen / numGreen;
+			int avgBlue = totalBlue / numBlue;
+
+			return Color.FromArgb(avgRed, avgGreen, avgBlue);
+		}
 
 		public static Bitmap CTM0(this Bitmap texture, Color color)
 		{
