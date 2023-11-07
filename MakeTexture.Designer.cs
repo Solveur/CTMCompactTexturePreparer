@@ -239,11 +239,12 @@
 			button_SelectBackground.Enabled = false;
 			button_SelectBackground.Location = new System.Drawing.Point(135, 38);
 			button_SelectBackground.Name = "button_SelectBackground";
-			button_SelectBackground.Size = new System.Drawing.Size(134, 23);
+			button_SelectBackground.Size = new System.Drawing.Size(135, 23);
 			button_SelectBackground.TabIndex = 18;
 			button_SelectBackground.Text = "Select background";
 			button_SelectBackground.UseVisualStyleBackColor = true;
-			button_SelectBackground.Click += Button_SelectBackground_Click;
+			button_SelectBackground.Visible = false;
+			button_SelectBackground.Click += button_SelectBackground_Click;
 			// 
 			// checkBox_DeleteBackground
 			// 
@@ -257,7 +258,7 @@
 			checkBox_DeleteBackground.UseVisualStyleBackColor = true;
 			checkBox_DeleteBackground.CheckedChanged += CheckBox_DeleteBackground_CheckedChanged;
 			// 
-			// MakeTexture
+			// Form_MakeTexture
 			// 
 			AllowDrop = true;
 			AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,7 +270,7 @@
 			Controls.Add(GroupBoxParameters);
 			Controls.Add(labelColor);
 			Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
-			Name = "MakeTexture";
+			Name = "Form_MakeTexture";
 			Text = "MakeTexture";
 			((System.ComponentModel.ISupportInitialize)pictureBox_Texture).EndInit();
 			((System.ComponentModel.ISupportInitialize)pictureBoxCTM0).EndInit();
@@ -306,8 +307,8 @@
 		private System.Windows.Forms.TextBox textBox_EmissiveSuffix;
 		private System.Windows.Forms.Label label_EmissiveSuffix;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Button button_SelectBackground;
 		private System.Windows.Forms.CheckBox checkBox_DeleteBackground;
+		private System.Windows.Forms.Button button_SelectBackground;
 	}
 }
 
