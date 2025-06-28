@@ -9,7 +9,6 @@
 	public partial class Form_MakeTexture : Form
 	{
 		Bitmap texture;
-		Bitmap background;
 		Color borderColor;
 		Image pictureBox_Temp;
 
