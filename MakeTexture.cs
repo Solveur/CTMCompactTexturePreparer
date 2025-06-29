@@ -26,9 +26,10 @@
 			if (openFileDialog.ShowDialog() == DialogResult.Cancel)
 				return;
 
-			string filename = openFileDialog.FileName;
 
-			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename)))
+			string texturePath = openFileDialog.FileName;
+
+			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(texturePath)))
 				texture = new Bitmap(ms);
 
 			SetTexture(texture);
@@ -37,32 +38,32 @@
 		private void ButtonSave_Click(object sender, EventArgs e)
 		{
 			saveFileDialog.Filter = "*.png|";
-				if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
-					return;
-
-				int textureSize = defaultTextureWidth;
-				Bitmap fusionTexture = new Bitmap(textureSize * 5, textureSize);
-				Bitmap CTM0 = texture.CTM0(borderColor);
-				Bitmap CTM1 = texture.CTM1(borderColor);
-				Bitmap CTM2 = texture.CTM2(borderColor);
-				Bitmap CTM3 = texture.CTM3(borderColor);
-				Bitmap CTM4 = texture.CTM4(borderColor);
-
-				for (int x = 0; x < textureSize; x++)
-				{
-					for (int y = 0; y < textureSize; y++)
-					{
-						//MessageBox.Show($"x:{x}, y:{y}");
-						fusionTexture.SetPixel(0 * textureSize + x, y, CTM0.GetPixel(x, y));
-						fusionTexture.SetPixel(1 * textureSize + x, y, CTM1.GetPixel(x, y));
-						fusionTexture.SetPixel(2 * textureSize + x, y, CTM2.GetPixel(x, y));
-						fusionTexture.SetPixel(3 * textureSize + x, y, CTM3.GetPixel(x, y));
-						fusionTexture.SetPixel(4 * textureSize + x, y, CTM4.GetPixel(x, y));
-					}
-				}
-
-				fusionTexture.Save(saveFileDialog.FileName);
+			saveFileDialog.FileName = openFileDialog.SafeFileName;
+			if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
 				return;
+
+			int textureSize = defaultTextureWidth;
+			Bitmap CTM0 = texture.CTM0(borderColor);
+			Bitmap CTM1 = texture.CTM1(borderColor);
+			Bitmap CTM2 = texture.CTM2(borderColor);
+			Bitmap CTM3 = texture.CTM3(borderColor);
+			Bitmap CTM4 = texture.CTM4(borderColor);
+
+			Bitmap fusionTexture = new Bitmap(textureSize * 5, textureSize);
+			for (int x = 0; x < textureSize; x++)
+			{
+				for (int y = 0; y < textureSize; y++)
+				{
+					fusionTexture.SetPixel(0 * textureSize + x, y, CTM0.GetPixel(x, y));
+					fusionTexture.SetPixel(1 * textureSize + x, y, CTM1.GetPixel(x, y));
+					fusionTexture.SetPixel(2 * textureSize + x, y, CTM2.GetPixel(x, y));
+					fusionTexture.SetPixel(3 * textureSize + x, y, CTM3.GetPixel(x, y));
+					fusionTexture.SetPixel(4 * textureSize + x, y, CTM4.GetPixel(x, y));
+				}
+			}
+
+			fusionTexture.Save(saveFileDialog.FileName);
+			return;
 		}
 
 		private void PictureBoxTexture_MouseClick(object sender, MouseEventArgs e)
@@ -110,7 +111,7 @@
 		private void PictureBoxTexture_DragDrop(object sender, DragEventArgs e)
 		{
 			string[] filename = (string[])e.Data.GetData(DataFormats.FileDrop);
-
+			openFileDialog.FileName = filename[0];
 			using (MemoryStream ms = new MemoryStream(File.ReadAllBytes(filename[0])))
 				texture = new Bitmap(ms);
 
